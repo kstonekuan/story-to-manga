@@ -16,22 +16,17 @@ export function StyleSelector({ value, onChange }: StyleSelectorProps) {
 				}`}
 			>
 				<div
-					className={`border-4 border-black px-4 py-2 font-black text-sm relative ${
+					className={`border-4 border-black px-2 sm:px-4 py-1 sm:py-2 font-black text-xs sm:text-sm relative ${
 						value === "manga"
-							? "bg-red-500 text-white shadow-[4px_4px_0px_0px_#000] transform -rotate-2"
-							: "bg-white text-black shadow-[2px_2px_0px_0px_#000] hover:bg-gray-100"
+							? "bg-red-500 text-white shadow-[2px_2px_0px_0px_#000] sm:shadow-[4px_4px_0px_0px_#000] transform sm:-rotate-2"
+							: "bg-white text-black shadow-[1px_1px_0px_0px_#000] sm:shadow-[2px_2px_0px_0px_#000] hover:bg-gray-100"
 					}`}
 				>
 					🎌 MANGA
-					{value === "manga" && (
-						<div className="absolute -top-2 -right-2 bg-yellow-400 border-2 border-black px-1 text-xs transform rotate-12">
-							ON!
-						</div>
-					)}
 				</div>
 			</button>
 
-			<div className="text-2xl font-black text-gray-400">VS</div>
+			<div className="text-xl sm:text-2xl font-black text-gray-400">VS</div>
 
 			<button
 				type="button"
@@ -41,18 +36,13 @@ export function StyleSelector({ value, onChange }: StyleSelectorProps) {
 				}`}
 			>
 				<div
-					className={`border-4 border-black px-4 py-2 font-black text-sm relative ${
+					className={`border-4 border-black px-2 sm:px-4 py-1 sm:py-2 font-black text-xs sm:text-sm relative ${
 						value === "comic"
-							? "bg-blue-500 text-white shadow-[4px_4px_0px_0px_#000] transform rotate-2"
-							: "bg-white text-black shadow-[2px_2px_0px_0px_#000] hover:bg-gray-100"
+							? "bg-blue-500 text-white shadow-[2px_2px_0px_0px_#000] sm:shadow-[4px_4px_0px_0px_#000] transform sm:rotate-2"
+							: "bg-white text-black shadow-[1px_1px_0px_0px_#000] sm:shadow-[2px_2px_0px_0px_#000] hover:bg-gray-100"
 					}`}
 				>
 					💥 COMIC
-					{value === "comic" && (
-						<div className="absolute -top-2 -right-2 bg-yellow-400 border-2 border-black px-1 text-xs transform rotate-12">
-							ON!
-						</div>
-					)}
 				</div>
 			</button>
 		</div>

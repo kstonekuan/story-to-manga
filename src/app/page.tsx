@@ -1,7 +1,5 @@
 "use client";
 
-import { useState } from "react";
-import { toast } from "sonner";
 import { ConfirmModal } from "@/components/ConfirmModal";
 import { ErrorModal } from "@/components/ErrorModal";
 import { GenerationControls } from "@/components/GenerationControls";
@@ -13,6 +11,8 @@ import { StoryInput } from "@/components/StoryInput";
 import { StyleSelector } from "@/components/StyleSelector";
 import { Toaster } from "@/components/ui/sonner";
 import { useMangaGenerator } from "@/hooks/useMangaGenerator";
+import { useState } from "react";
+import { toast } from "sonner";
 
 export default function Home() {
 	// Use our custom hook for all manga generation logic
@@ -111,30 +111,19 @@ export default function Home() {
 
 			{/* Manga Style Header Panel */}
 			<div className="relative z-10">
-				<div className="bg-white border-4 border-black mx-4 mt-4 rounded-none relative overflow-hidden shadow-[8px_8px_0px_0px_#000]">
+				<div className="bg-white border-4 border-black mx-2 sm:mx-4 mt-4 rounded-none relative overflow-hidden shadow-[4px_4px_0px_0px_#000] sm:shadow-[8px_8px_0px_0px_#000]">
 					<div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-500 to-yellow-500" />
 					<div className="p-6">
-						<div className="flex items-center justify-between">
-							<div className="flex items-center gap-6">
+						<div className="flex flex-col sm:flex-row items-center justify-between gap-8">
+							<div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-6">
 								{/* Manga Style Title */}
 								<div className="relative">
 									<div className="absolute -inset-2 bg-yellow-300 transform rotate-2 rounded-lg opacity-50" />
-									<h1 className="relative text-4xl font-black tracking-wider transform -rotate-1 text-black">
+									<h1 className="relative text-2xl sm:text-3xl lg:text-4xl font-black tracking-wider transform sm:-rotate-1 text-black">
 										{appStyle === "manga" ? "STORY→MANGA" : "STORY→COMIC"}
 									</h1>
-									<div className="absolute -bottom-2 -right-2 text-red-500 font-black text-sm transform rotate-12">
+									<div className="absolute -bottom-1 -right-1 sm:-bottom-2 sm:-right-2 text-red-500 font-black text-xs sm:text-sm transform rotate-12">
 										AI POWERED!
-									</div>
-								</div>
-
-								{/* Speech Bubble */}
-								<div className="relative ml-8">
-									<div className="bg-white border-3 border-black rounded-full px-4 py-2 shadow-[4px_4px_0px_0px_#000] relative">
-										<p className="text-sm font-bold text-black whitespace-nowrap">
-											Transform stories into visual art!
-										</p>
-										<div className="absolute -left-2 top-1/2 transform -translate-y-1/2 w-0 h-0 border-t-[8px] border-t-transparent border-b-[8px] border-b-transparent border-r-[12px] border-r-black" />
-										<div className="absolute -left-1 top-1/2 transform -translate-y-1/2 w-0 h-0 border-t-[6px] border-t-transparent border-b-[6px] border-b-transparent border-r-[10px] border-r-white" />
 									</div>
 								</div>
 							</div>
