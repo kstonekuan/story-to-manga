@@ -279,7 +279,11 @@ function StepContent({
 			)
 				return null;
 			const layoutData = step.data as {
-				panels: Array<{ number: number; scene: string; dialogue: string }>;
+				panels: Array<{
+					panelNumber: number;
+					sceneDescription: string;
+					dialogue?: string;
+				}>;
 			};
 			return (
 				<div className="space-y-4">
@@ -287,11 +291,15 @@ function StepContent({
 					<div className="space-y-3">
 						{layoutData.panels.map(
 							(
-								panel: { number: number; scene: string; dialogue: string },
+								panel: {
+									panelNumber: number;
+									sceneDescription: string;
+									dialogue?: string;
+								},
 								i: number,
 							) => (
 								<div
-									key={panel.number}
+									key={panel.panelNumber}
 									className="bg-white border-4 border-black shadow-[4px_4px_0px_0px_#000] p-4"
 								>
 									<div className="flex items-start gap-3">
@@ -301,12 +309,18 @@ function StepContent({
 										<div className="flex-1">
 											<div className="font-black text-sm mb-2">SCENE:</div>
 											<div className="bg-gray-100 border-2 border-gray-400 p-2 text-sm font-bold mb-2">
-												{panel.scene}
+												{panel.sceneDescription}
 											</div>
-											<div className="font-black text-sm mb-2">DIALOGUE:</div>
-											<div className="bg-yellow-100 border-2 border-yellow-400 p-2 text-sm font-bold italic">
-												"{panel.dialogue}"
-											</div>
+											{panel.dialogue && (
+												<>
+													<div className="font-black text-sm mb-2">
+														DIALOGUE:
+													</div>
+													<div className="bg-yellow-100 border-2 border-yellow-400 p-2 text-sm font-bold italic">
+														"{panel.dialogue}"
+													</div>
+												</>
+											)}
 										</div>
 									</div>
 								</div>

@@ -45,6 +45,7 @@ export function useMangaGenerator() {
 	const [settingImages, setSettingImages] = useState<UploadedImage[]>([]);
 	const [isGenerating, setIsGenerating] = useState(false);
 	const [currentStepText, setCurrentStepText] = useState("");
+	const [currentStepId, setCurrentStepId] = useState<string | null>(null);
 
 	// Generated content state
 	const [storyAnalysis, setStoryAnalysis] = useState<StoryAnalysis | null>(
@@ -162,6 +163,7 @@ export function useMangaGenerator() {
 
 		setIsGenerating(true);
 		setCurrentStepText("Analyzing your story...");
+		setCurrentStepId("analysis");
 
 		// Reset all steps
 		setGenerationSteps((steps) =>
@@ -194,6 +196,7 @@ export function useMangaGenerator() {
 
 			// Step 2: Generate character references
 			setCurrentStepText("Creating character designs...");
+			setCurrentStepId("characters");
 			updateStepStatus("characters", "in-progress");
 
 			const charRefResponse = await fetch("/api/generate-character-refs", {
@@ -227,6 +230,7 @@ export function useMangaGenerator() {
 
 			// Step 3: Break down story into panels
 			setCurrentStepText("Planning comic layout...");
+			setCurrentStepId("layout");
 			updateStepStatus("layout", "in-progress");
 
 			const storyBreakdownResponse = await fetch("/api/chunk-story", {
@@ -254,6 +258,7 @@ export function useMangaGenerator() {
 			updateStepStatus("layout", "completed", { panels: breakdown.panels });
 
 			// Step 4: Generate comic panels
+			setCurrentStepId("panels");
 			updateStepStatus("panels", "in-progress");
 			const panels: GeneratedPanel[] = [];
 
@@ -298,14 +303,19 @@ export function useMangaGenerator() {
 			}
 
 			updateStepStatus("panels", "completed", {
-				panels: panels.map((p) => ({ number: p.panelNumber, url: p.image })),
+				panels: panels.map((p) => ({
+					id: p.panelNumber.toString(),
+					url: p.image,
+				})),
 			});
 
 			// Step 5: Enable share functionality
+			setCurrentStepId("share");
 			updateStepStatus("share", "completed", { available: true });
 
 			setCurrentStepText("Complete! 🎉");
 			setIsGenerating(false);
+			setCurrentStepId(null);
 
 			// Track successful generation
 			const generationTime = Date.now() - generationStartTime;
@@ -317,17 +327,27 @@ export function useMangaGenerator() {
 				error instanceof Error ? error.message : "Generation failed";
 
 			setIsGenerating(false);
+			setCurrentStepId(null);
 			trackError("generation_failed", errorMessage);
 
-			// Update the appropriate step with error
-			if (!storyAnalysis) {
-				updateStepStatus("analysis", "error", undefined, errorMessage);
-			} else if (characterReferences.length === 0) {
-				updateStepStatus("characters", "error", undefined, errorMessage);
-			} else if (!storyBreakdown) {
-				updateStepStatus("layout", "error", undefined, errorMessage);
+			// Update the step that was currently in progress with error
+			if (currentStepId) {
+				updateStepStatus(currentStepId, "error", undefined, errorMessage);
 			} else {
-				updateStepStatus("panels", "error", undefined, errorMessage);
+				// Fallback: if no currentStepId, find the step that's in-progress and mark it as error
+				setGenerationSteps((prev) => {
+					const inProgressStep = prev.find(
+						(step) => step.status === "in-progress",
+					);
+					if (inProgressStep) {
+						return prev.map((step) =>
+							step.id === inProgressStep.id
+								? { ...step, status: "error" as const, error: errorMessage }
+								: step,
+						);
+					}
+					return prev;
+				});
 			}
 
 			throw error;
@@ -369,7 +389,7 @@ export function useMangaGenerator() {
 					if (savedState.generatedPanels.length > 0) {
 						updateStepStatus("panels", "completed", {
 							panels: savedState.generatedPanels.map((p) => ({
-								number: p.panelNumber,
+								id: p.panelNumber.toString(),
 								url: p.image,
 							})),
 						});
@@ -435,6 +455,23 @@ export function useMangaGenerator() {
 		getUploadedSettingReferences,
 	]);
 
+	const clearResults = () => {
+		// Clear only generated content, keep story and settings intact
+		setStoryAnalysis(null);
+		setCharacterReferences([]);
+		setStoryBreakdown(null);
+		setGeneratedPanels([]);
+		setGenerationSteps((steps) =>
+			steps.map((step) => ({
+				...step,
+				status: "pending" as const,
+				data: undefined,
+				error: undefined,
+			})),
+		);
+		setCurrentStepId(null);
+	};
+
 	const clearAllGeneratedData = async () => {
 		try {
 			await clearAllData();
@@ -454,6 +491,7 @@ export function useMangaGenerator() {
 					error: undefined,
 				})),
 			);
+			setCurrentStepId(null);
 		} catch (error) {
 			console.error("Failed to clear data:", error);
 			throw error;
@@ -485,6 +523,7 @@ export function useMangaGenerator() {
 
 		// Actions
 		generateComic,
+		clearResults,
 		clearAllGeneratedData,
 		updateStepStatus,
 

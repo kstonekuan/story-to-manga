@@ -8,6 +8,9 @@ export const metadata: Metadata = {
 	title: "Story to Manga Machine",
 	description:
 		"Transform your stories into manga and comic pages using Nano Banana (Gemini 2.5 Flash Image)",
+	icons: {
+		icon: "/favicon.ico",
+	},
 };
 
 export default function RootLayout({

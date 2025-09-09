@@ -30,6 +30,7 @@ export default function Home() {
 		wordCount,
 		isLoadingState,
 		generateComic,
+		clearResults,
 		clearAllGeneratedData,
 	} = useMangaGenerator();
 
@@ -57,7 +58,7 @@ export default function Home() {
 
 	// Clear just the generation results
 	const handleClearResults = () => {
-		// Reset steps to pending - this will be handled by the hook
+		clearResults();
 		toast.success("Results cleared");
 	};
 
