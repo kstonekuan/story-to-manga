@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+import { toast } from "sonner";
 import { ConfirmModal } from "@/components/ConfirmModal";
 import { ErrorModal } from "@/components/ErrorModal";
 import { GenerationControls } from "@/components/GenerationControls";
@@ -11,8 +13,6 @@ import { StoryInput } from "@/components/StoryInput";
 import { StyleSelector } from "@/components/StyleSelector";
 import { Toaster } from "@/components/ui/sonner";
 import { useMangaGenerator } from "@/hooks/useMangaGenerator";
-import { useState } from "react";
-import { toast } from "sonner";
 
 export default function Home() {
 	// Use our custom hook for all manga generation logic
